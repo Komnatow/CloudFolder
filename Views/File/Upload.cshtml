@@ -1,0 +1,14 @@
+@{
+    ViewBag.Title = "Upload File";
+}
+
+<h2>Upload File</h2>
+
+<form asp-controller="File" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="file">Choose a file:</label>
+        <input type="file" name="file" id="file" />
+        <input type="hidden" id="CurrentPath" name="CurrentPath" value=@ViewBag.CurrentPath>
+    </div>
+    <button type="submit">Upload</button>
+</form>

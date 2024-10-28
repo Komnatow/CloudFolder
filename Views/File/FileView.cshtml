@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="text-center">
+    <h1 class="display-4">File Details</h1>
+    
+    <p>Name: @ViewBag.fileName</p>
+    <p>Created: @ViewBag.fileDate</p>
+    <p>File Extension: @ViewBag.fileExtension</p>
+    <p>File Size @ViewBag.fileSize</p>
+    @if (ViewBag.isText == true)
+    {
+        <div style="white-space: pre-wrap; border: 1px solid #ddd; padding: 10px; margin-top: 20px;">
+            @ViewBag.FileContent
+        </div>
+    }
+</div>

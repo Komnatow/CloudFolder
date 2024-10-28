@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Current folder: @ViewBag.current_path</p>
+    
+    <a class="nav-link text-dark" asp-area="" asp-controller="Folder" asp-action="CreateFolder">Create new Folder</a>
+    @if (ViewBag.directories.Count >0)
+    {
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Directory</th>
+                </tr>
+            </thead>
+            <tbody>
+                 @foreach (var directory in ViewBag.directories)
+                {
+                    <tr>
+                        <td>@directory</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>There are not Directories right now here.</p>
+    }
+
+    <a class="nav-link text-dark" asp-area="" asp-controller="File" asp-action="Upload">Upload new file</a>
+    @if (ViewBag.files.Count >0)
+    {
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Files</th>
+                </tr>
+            </thead>
+            <tbody>
+                 @foreach (var file in ViewBag.files)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("FileView", "File", new { fileToDetail = @file })">@file</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>There are not Files right now here.</p>
+    }
+</div>
