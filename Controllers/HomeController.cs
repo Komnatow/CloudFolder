@@ -2,24 +2,28 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using CloudFolder.Models;
 using CloudFolder.Procedures;
+using Microsoft.Extensions.Options;
+using System.Text.Json;
+using System.IO;
 
 namespace CloudFolder.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private IOptions<GlobalVariablesOptions> _global;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IOptions<GlobalVariablesOptions> global)
     {
-        _logger = logger;
+        _global = global;
     }
 
     public IActionResult Index()
     {
-        ViewBag.current_path = @"D:\Storage";
-        TempData["Current_Path"] = ViewBag.current_path;
-        ViewBag.files = Directory_Operations.ListDirectoryFiles(ViewBag.current_path);
-        ViewBag.directories = Directory_Operations.ListDirectorySubdirectories(ViewBag.current_path);
+        var global = _global.Value;
+        ViewBag.current_path = global.InitialFolder;
+        ViewBag.role = global.role;
+        ViewBag.files = DirectoryOperations.ListDirectoryFiles(ViewBag.current_path);
+        ViewBag.directories = DirectoryOperations.ListDirectorySubdirectories(ViewBag.current_path);
         return View();
     }
 

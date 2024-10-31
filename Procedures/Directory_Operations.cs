@@ -2,7 +2,7 @@ using System.IO;
 
 namespace CloudFolder.Procedures;
 
-public class Directory_Operations
+public class DirectoryOperations
 {
     public static void CheckDirectory(string folderPath)
     {

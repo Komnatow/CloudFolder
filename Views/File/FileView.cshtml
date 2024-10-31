@@ -1,19 +1,23 @@
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "File Page";
+    var textFileContent = ViewBag.fileContent as string;
 }
 
 
 <div class="text-center">
     <h1 class="display-4">File Details</h1>
     
+    <a href="@Url.Action("DownloadFile", "File", new { fileFullName = @ViewBag.fileFullName, fileName = @ViewBag.fileName })">Download</a><
     <p>Name: @ViewBag.fileName</p>
     <p>Created: @ViewBag.fileDate</p>
     <p>File Extension: @ViewBag.fileExtension</p>
     <p>File Size @ViewBag.fileSize</p>
     @if (ViewBag.isText == true)
     {
-        <div style="white-space: pre-wrap; border: 1px solid #ddd; padding: 10px; margin-top: 20px;">
-            @ViewBag.FileContent
-        </div>
+        <textarea rows="20" cols="80" style="width: 100%; height: 400px; overflow: auto;" readonly>@textFileContent</textarea>
+    }
+    @if (ViewBag.isPicture == true)
+    {
+        <img src="@Url.Action("GetImage", "File", new { fileFullName = @ViewBag.fileFullName })" alt="Image preview" width:600px />
     }
 </div>

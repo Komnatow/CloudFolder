@@ -1,14 +1,24 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using CloudFolder.Models;
+using Microsoft.Extensions.Options;
 using CloudFolder.Procedures;
+using System.IO;
 
 namespace CloudFolder.Controllers;
 
 public class FileController : Controller
 {
+    private IOptions<GlobalVariablesOptions> _global;
+
+    public FileController(IOptions<GlobalVariablesOptions> global)
+    {
+        _global = global;
+    }
     public ActionResult FileView(string fileToDetail)
     {
+        var global = _global.Value;
+        string fileContent = "";
         FileInfo oFileInfo = new FileInfo(fileToDetail);
         ViewBag.isPicture = false;
         ViewBag.isText = false;
@@ -18,9 +28,7 @@ public class FileController : Controller
         }
         if(oFileInfo.Extension == ".txt")
         {
-            Console.WriteLine("Weszło do if od tekstu.");
-            ViewBag.isPicture = true;
-            string fileContent;
+            ViewBag.isText = true;
             using (var reader = new StreamReader(fileToDetail))
             {
                 fileContent = reader.ReadToEnd();
@@ -33,25 +41,42 @@ public class FileController : Controller
         ViewBag.fileDate = dtCreationTime.ToString();
         ViewBag.fileExtension = oFileInfo.Extension;
         ViewBag.fileSize = oFileInfo.Length.ToString();
-        ViewBag.FileFullName = oFileInfo.FullName;
-        ViewBag.CurrentPath = TempData["Current_Path"];
-        TempData["Current_Path"] = ViewBag.CurrentPath;
+        ViewBag.fileFullName = oFileInfo.FullName;
+        ViewBag.CurrentPath = global.currentFolder;
         return View();
+    }
+
+    public IActionResult GetImage(string fileFullName)
+    {
+
+        if (!System.IO.File.Exists(fileFullName))
+        {
+            return NotFound();
+        }
+
+        var image = System.IO.File.ReadAllBytes(fileFullName);
+        return File(image, "image/jpeg"); // Typ MIME dla JPEG
     }
 
     public ActionResult Upload()
     {
-        ViewBag.CurrentPath = TempData["Current_Path"];
-        TempData["Current_Path"] = ViewBag.CurrentPath;
+        var global = _global.Value;
+        ViewBag.CurrentPath = global.currentFolder;
         return View();
+    }
+
+    [HttpGet]
+    public FileResult DownloadFile(string fileFullName, string fileName)
+    {
+        byte[] bytes = System.IO.File.ReadAllBytes(fileFullName);
+        return File(bytes, "Application/octec-stream", fileName);
     }
 
     [HttpPost]
     public async Task<IActionResult> UploadFile(IFormFile file)
     {
-        Console.WriteLine("Weszło do skryptu Upload.");
-        ViewBag.CurrentPath = TempData["Current_Path"];
-        TempData["Current_Path"] = ViewBag.CurrentPath;
+        var global = _global.Value;
+        ViewBag.CurrentPath = global.currentFolder;
         if (file == null || file.Length == 0)
         {
             ViewBag.Message = "No file selected";
@@ -67,7 +92,13 @@ public class FileController : Controller
             await file.CopyToAsync(stream);
         }
 
-        ViewBag.Message = "File uploaded successfully";
-        return RedirectToAction("Index", "Home");
+        if (ViewBag.CurrentPath != global.InitialFolder)
+        {
+            return RedirectToAction("FolderView", "Folder", new { subfolderAdress = ViewBag.CurrentPath } );
+        }
+        else
+        {
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

@@ -1,6 +1,10 @@
 using CloudFolder.Data;
 using Microsoft.EntityFrameworkCore;
 using CloudFolder.Procedures;
+using CloudFolder.Models;
+using System.Text.Json;
+using System.Web;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,15 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+JsonDocument jsonDocument = JsonDocument.Parse(File.ReadAllText("config.json"));
+JsonElement root = jsonDocument.RootElement;
+builder.Services.Configure<GlobalVariablesOptions>(global =>
+{
+    global.InitialFolder = root.GetProperty("InitialFolder").GetString();
+    global.currentFolder = global.InitialFolder;
+    global.adminFolder = root.GetProperty("AdminOnlyFolder").GetString();;
+});
 
 var app = builder.Build();
 
@@ -31,6 +44,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-Directory_Operations.CheckDirectory(@"D:\Storage");
+DirectoryOperations.CheckDirectory(root.GetProperty("InitialFolder").GetString());
 
 app.Run();
