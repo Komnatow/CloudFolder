@@ -7,7 +7,7 @@
 <div class="text-center">
     <h1 class="display-4">File Details</h1>
     
-    <a href="@Url.Action("DownloadFile", "File", new { fileFullName = @ViewBag.fileFullName, fileName = @ViewBag.fileName })">Download</a><
+    <a href="@Url.Action("DownloadFile", "File", new { fileFullName = @ViewBag.fileFullName, fileName = @ViewBag.fileName })">Download</a>
     <p>Name: @ViewBag.fileName</p>
     <p>Created: @ViewBag.fileDate</p>
     <p>File Extension: @ViewBag.fileExtension</p>
@@ -19,5 +19,11 @@
     @if (ViewBag.isPicture == true)
     {
         <img src="@Url.Action("GetImage", "File", new { fileFullName = @ViewBag.fileFullName })" alt="Image preview" width:600px />
+    }
+    @if (ViewBag.isFilm == true)
+    {
+        <video width="600" controls> 
+            <source src="@Url.Action("GetVideo", "File", new { fileFullName = @ViewBag.fileFullName })"  type="video/mp4"/>
+        </video>
     }
 </div>

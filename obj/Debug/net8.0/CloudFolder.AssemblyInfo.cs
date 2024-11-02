@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CloudFolder")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7c045dc3f894b3fa69ca01a38d70f3f89ace4e8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7157ce6838f26a04455f67bc60f39e27eaf3a76a")]
 [assembly: System.Reflection.AssemblyProductAttribute("CloudFolder")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CloudFolder")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -22,6 +22,7 @@ public class FileController : Controller
         FileInfo oFileInfo = new FileInfo(fileToDetail);
         ViewBag.isPicture = false;
         ViewBag.isText = false;
+        ViewBag.isFilm = false;
         if(oFileInfo.Extension == ".jpg" || oFileInfo.Extension == ".jpeg" || oFileInfo.Extension == ".png" || oFileInfo.Extension == ".webp" )
         {
             ViewBag.isPicture = true;
@@ -35,6 +36,10 @@ public class FileController : Controller
             }
 
             ViewBag.FileContent = fileContent;
+        }
+        if(oFileInfo.Extension == ".mp4" || oFileInfo.Extension == ".avi" || oFileInfo.Extension == ".mov" )
+        {
+            ViewBag.isFilm = true;
         }
         ViewBag.fileName = oFileInfo.Name;
         DateTime dtCreationTime = oFileInfo.CreationTime;
@@ -55,7 +60,21 @@ public class FileController : Controller
         }
 
         var image = System.IO.File.ReadAllBytes(fileFullName);
-        return File(image, "image/jpeg"); // Typ MIME dla JPEG
+        return File(image, "image/jpeg");
+    }
+
+    [HttpGet]
+    public IActionResult GetVideo(string fileFullName)
+    {
+        if (!System.IO.File.Exists(fileFullName))
+        {
+            return NotFound();
+        }
+        FileInfo oFileInfo = new FileInfo(fileFullName);
+
+        var stream = new FileStream(fileFullName, FileMode.Open, FileAccess.Read);
+        var contentType = "video/.mp4"; 
+        return new FileStreamResult(stream, contentType);
     }
 
     public ActionResult Upload()

@@ -28,7 +28,7 @@ public class FolderController : Controller
         }
         else
         {
-            return Forbid();
+            return StatusCode(403, "You do not have permission to access this resource.");
         }
     }
 
@@ -42,7 +42,7 @@ public class FolderController : Controller
         }
         else
         {
-            return Forbid();
+            return StatusCode(403, "You do not have permission to access this resource.");
         }
     }
 
@@ -55,7 +55,7 @@ public class FolderController : Controller
         var forbidden = new [] {@"/", @"<", @">", @":", "\"", @"|", @"?", @"*"};
 
         // Sprawdź, czy folder już istnieje
-        if (model.FolderName.Length >0 && !Directory.Exists(fullPath))
+        if (model.FolderName.Length >0 && !Directory.Exists(fullPath) && !forbidden.Any(c => model.FolderName.Contains(c)))
         {
             Directory.CreateDirectory(fullPath);
             if (model.CurrentPath != global.InitialFolder)
