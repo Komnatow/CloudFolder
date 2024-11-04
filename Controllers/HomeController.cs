@@ -17,14 +17,24 @@ public class HomeController : Controller
         _global = global;
     }
 
+    [HttpGet]
     public IActionResult Index()
     {
-        var global = _global.Value;
-        ViewBag.current_path = global.InitialFolder;
-        ViewBag.role = global.role;
-        ViewBag.files = DirectoryOperations.ListDirectoryFiles(ViewBag.current_path);
-        ViewBag.directories = DirectoryOperations.ListDirectorySubdirectories(ViewBag.current_path);
-        return View();
+        if (Request.Headers.TryGetValue("role", out var roleHeader))
+        {
+            string role = roleHeader.FirstOrDefault();
+            ViewBag.role = role;            
+            var global = _global.Value;
+            ViewBag.current_path = global.InitialFolder;
+            ViewBag.adminFolder = global.adminFolder;
+            ViewBag.files = DirectoryOperations.ListDirectoryFiles(ViewBag.current_path);
+            ViewBag.directories = DirectoryOperations.ListDirectorySubdirectories(ViewBag.current_path);
+            return View();
+        }
+        else
+        {
+            return StatusCode(500, "Server communications error.");
+        }
     }
 
     public IActionResult Privacy()

@@ -15,34 +15,53 @@ public class FolderController : Controller
         _global = global;
     }
 
+    [HttpGet]
     public ActionResult FolderView(string subfolderAdress)
     {
-        var global = _global.Value;
-        if(subfolderAdress != global.adminFolder ||(subfolderAdress == global.adminFolder && global.role == "admin"))
+        if (Request.Headers.TryGetValue("role", out var roleHeader))
         {
-            ViewBag.current_path = subfolderAdress;
-            global.currentFolder = subfolderAdress;
-            ViewBag.files = DirectoryOperations.ListDirectoryFiles(ViewBag.current_path);
-            ViewBag.directories = DirectoryOperations.ListDirectorySubdirectories(ViewBag.current_path);
-            return View();
+            string role = roleHeader.FirstOrDefault();
+            var global = _global.Value;
+            if(subfolderAdress != global.adminFolder ||(subfolderAdress == global.adminFolder && role == "admin"))
+            {
+                ViewBag.current_path = subfolderAdress;
+                global.currentFolder = subfolderAdress;
+                ViewBag.role = role;
+                ViewBag.files = DirectoryOperations.ListDirectoryFiles(ViewBag.current_path);
+                ViewBag.directories = DirectoryOperations.ListDirectorySubdirectories(ViewBag.current_path);
+                return View();
+            }
+            else
+            {
+                return StatusCode(403, "You do not have permission to access this resource.");
+            }
         }
         else
         {
-            return StatusCode(403, "You do not have permission to access this resource.");
+            return StatusCode(500, "Server communications error.");
         }
     }
 
+    [HttpGet]
     public ActionResult CreateFolder()
     {
-        var global = _global.Value;
-        if(global.role == "admin")
+        if (Request.Headers.TryGetValue("role", out var roleHeader))
         {
-            ViewBag.CurrentPath = global.currentFolder;
-            return View(new FolderModel());
+            string role = roleHeader.FirstOrDefault();
+            var global = _global.Value;
+            if(role == "admin")
+            {
+                ViewBag.CurrentPath = global.currentFolder;
+                return View(new FolderModel());
+            }
+            else
+            {
+                return StatusCode(403, "You do not have permission to access this resource.");
+            }
         }
         else
         {
-            return StatusCode(403, "You do not have permission to access this resource.");
+            return StatusCode(500, "Server communications error.");
         }
     }
 
