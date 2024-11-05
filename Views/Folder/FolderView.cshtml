@@ -6,6 +6,7 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>user role:  @ViewBag.role</p>
+    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="RoleForm">Set Role</a>
     <p>Current folder: @ViewBag.current_path</p>
     @if (ViewBag.role == "admin")
     {

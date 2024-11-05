@@ -1,0 +1,11 @@
+@{
+    ViewBag.Title = "role form";
+}
+
+<h2>Wprowadź rolę</h2>
+
+<form asp-action="SetRole" asp-controller="Home" method="post">
+    <label for="role">User Role:</label>
+    <input type="text" id="RoleName" name="RoleName" required />
+    <button type="submit">Submit</button>
+</form>

@@ -5,12 +5,12 @@
 
 <form asp-action="CreateNewFolder" asp-controller="Folder" method="post">
     <div>
-        <label for="folderName">Nazwa folderu:</label>
+        <label for="folderName">Folder Name:</label>
         <input type="text" id="FolderName" name="FolderName" required />
         <input type="hidden" id="CurrentPath" name="CurrentPath" value=@ViewBag.CurrentPath>
     </div>
     
     <div>
-        <button type="submit" class="btn btn-primary">Utwórz Folder</button>
+        <button type="submit" class="btn btn-primary">Create Folder</button>
     </div>
 </form>

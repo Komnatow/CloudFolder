@@ -5,7 +5,6 @@ namespace CloudFolder.Models
         public string InitialFolder { get; set; }
         public string currentFolder { get; set; }
         public string adminFolder {get; set;}
-
-        public string role { get; set; } = "user";
+        public string role {get; set;}
     }
 }

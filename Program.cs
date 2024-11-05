@@ -21,6 +21,7 @@ builder.Services.Configure<GlobalVariablesOptions>(global =>
     global.InitialFolder = root.GetProperty("InitialFolder").GetString();
     global.currentFolder = global.InitialFolder;
     global.adminFolder = root.GetProperty("AdminOnlyFolder").GetString();
+    global.role = "";
 });
 
 var app = builder.Build();
@@ -40,13 +41,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.Use(async (context, next) =>
-{
-    context.Request.Headers.Add("role", root.GetProperty("Role").GetString());
-    await next();
-});
-
-//app.UseMiddleware<RoleMiddleware>();
+app.UseMiddleware<RoleMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

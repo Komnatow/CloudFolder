@@ -1,5 +1,4 @@
 {
 	"InitialFolder": "D:\\Storage",
-	"AdminOnlyFolder": "D:\\Storage\\admin",
-    "Role": "admin"
+	"AdminOnlyFolder": "D:\\Storage\\admin"
 }

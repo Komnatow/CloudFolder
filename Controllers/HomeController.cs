@@ -23,19 +23,37 @@ public class HomeController : Controller
         if (Request.Headers.TryGetValue("role", out var roleHeader))
         {
             string role = roleHeader.FirstOrDefault();
-            ViewBag.role = role;            
-            var global = _global.Value;
-            ViewBag.current_path = global.InitialFolder;
-            ViewBag.adminFolder = global.adminFolder;
-            ViewBag.files = DirectoryOperations.ListDirectoryFiles(ViewBag.current_path);
-            ViewBag.directories = DirectoryOperations.ListDirectorySubdirectories(ViewBag.current_path);
-            return View();
+            ViewBag.role = role;
+        }
+        var global = _global.Value;
+        ViewBag.current_path = global.InitialFolder;
+        ViewBag.adminFolder = global.adminFolder;
+        ViewBag.files = DirectoryOperations.ListDirectoryFiles(ViewBag.current_path);
+        ViewBag.directories = DirectoryOperations.ListDirectorySubdirectories(ViewBag.current_path);
+        return View();
+    }
+
+    public IActionResult RoleForm()
+    {
+        return View(new RoleModel());
+    }
+
+    [HttpPost]
+    public IActionResult SetRole(RoleModel model)
+    {
+        var global = _global.Value;
+        global.role = model.RoleName;
+
+        if (global.currentFolder != global.InitialFolder)
+        {
+            return RedirectToAction("FolderView", "Folder", new { subfolderAdress = global.currentFolder } );
         }
         else
         {
-            return StatusCode(500, "Server communications error.");
+            return RedirectToAction("Index", "Home");
         }
     }
+
 
     public IActionResult Privacy()
     {
